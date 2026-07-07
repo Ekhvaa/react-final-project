@@ -12,7 +12,7 @@ const navLinks = [
 
 const Header = () => {
   return (
-    <div className='flex justify-between items-center w-full p-3 bg-[#88ff96] text-white'>
+    <div className='flex justify-between items-center w-full p-3 bg-[#8dfc9c] text-white'>
         <div>
             <Link to='/'>
                 <img src={logo} alt='logo' className='h-15'></img>

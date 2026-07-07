@@ -20,7 +20,6 @@ const Hero = () => {
   return (
     <>
         <div className='relative w-full h-100 overflow-hidden bg-black flex items-center justify-center'>
-            
             {heroImages.map((image, index) => (
                 <img
                     key={index}
@@ -41,7 +40,6 @@ const Hero = () => {
                 </p>
                 <Searchbar />
             </div>
-
         </div>
     </>
   )

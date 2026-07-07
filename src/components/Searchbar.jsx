@@ -28,7 +28,7 @@ const Searchbar = () => {
                 />
                 <button 
                     type="submit" 
-                    className="bg-[#fafa52] text-white px-6 py-3 hover:bg-[#fcfc03] font-semibold transition-colors shrink-0"
+                    className="bg-[#fcfb9d] rounded-full text-white px-3 py-3 m-3 hover:bg-[#fcfc03] font-semibold transition-colors shrink-0"
                 >
                     <img src={searchIcon} alt="Search" className='h-5'/>
                 </button>
