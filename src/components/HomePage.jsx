@@ -7,6 +7,7 @@ import phone from '../assets/Phone.svg'
 import map from '../assets/Guide.svg'
 import money from '../assets/Money.svg'
 import refund from '../assets/Refund.svg'
+import { useNavigate } from 'react-router-dom'
 
 const valuePropositionValues = [
   {
@@ -42,7 +43,7 @@ const HomePage = () => {
           {valuePropositionValues.map((item) => <ValuePropositionCard props={item}/>)}
         </div>
         <h2 className="text-3xl text-center font-bold mb-18 text-gray-900">Trending Tours</h2>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-8">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-15 justify-items-center">
           <TourCard />
           <TourCard />
           <TourCard />

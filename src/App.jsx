@@ -4,7 +4,7 @@ import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 import HomePage from './components/HomePage'
-import TourPage from './components/TourPage'
+import TourPage from './Pages/TourPage'
 import { Route, Routes } from 'react-router-dom'
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
     <>
     <Routes>
       <Route path='/' element={<HomePage />}/>
-      <Route path='/tour' element={<TourPage />}/>
+      <Route path='/tours' element={<TourPage />}/>
     </Routes>
     </>
   )

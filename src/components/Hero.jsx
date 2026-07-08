@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import heroImage1 from '../assets/HeroImage1.jpg'
 import heroImage2 from '../assets/HeroImage2.jpg'
 import heroImage3 from '../assets/HeroImage3.jpg'
@@ -8,14 +9,19 @@ const heroImages = [heroImage1, heroImage2, heroImage3];
 
 const Hero = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
-
+    const navigate = useNavigate();
+      
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
         }, 5000);
 
         return () => clearInterval(interval);
-    }, [])
+    }, []);
+
+    const handleChangeRedirect = (searchQuery) => {
+        navigate(`/tours?search=${encodeURIComponent(searchQuery)}`)
+    };
 
   return (
     <>
@@ -38,7 +44,7 @@ const Hero = () => {
                 <p className='text-lg md:text-xl font-light mb-8 drop-shadow-md'>
                     Find your favourite tours here
                 </p>
-                <Searchbar />
+                <Searchbar onChange={handleChangeRedirect} searchbarWidth={'full'}/>
             </div>
         </div>
     </>

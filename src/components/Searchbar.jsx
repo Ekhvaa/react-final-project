@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 import searchIcon from '../assets/SearchIcon.svg'
 
-const Searchbar = () => {
+const Searchbar = ( {onChange, className, value, searchbarWidth} ) => {
     const [query, setQuery] = useState('');
 
     const handleInputChange = (e) => {
@@ -12,16 +12,15 @@ const Searchbar = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(query);
-        setQuery('');
+        if (onChange) onChange(query);
     };
-
+// `w-${searchbarWidth} h-12 bg-white relative z-20 rounded-full`
   return (
-    <div className='w-full h-12 bg-white relative z-20 mg-20 rounded-full'>
-        <form onSubmit={handleSubmit} className="flex shadow-lg rounded-lg overflow-hidden bg-white">
+    <div className={`w-${searchbarWidth} h-12 bg-white relative z-20 rounded-full p-5`}>
+        <form onSubmit={handleSubmit} className="flex shadow-lg rounded-3xl bg-white">
                 <input 
                     type="text" 
-                    value={query}
+                    value={query ? query : value}
                     onChange={handleInputChange}
                     placeholder="Which city you want to go in..." 
                     className="w-full px-4 py-3 text-gray-700 focus:outline-none placeholder-gray-400"
