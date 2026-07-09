@@ -1,0 +1,11 @@
+namespace TourApi.Models;
+
+public sealed class ExternalLogin : BaseEntity
+{
+    public int UserId { get; set; }
+    public User User { get; set; } = null!;
+
+    public string Provider { get; set; } = string.Empty;
+    public string ProviderUserId { get; set; } = string.Empty;
+    public string? Email { get; set; }
+}
