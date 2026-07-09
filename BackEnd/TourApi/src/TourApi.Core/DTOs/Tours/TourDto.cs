@@ -1,0 +1,15 @@
+using TourApi.DTOs.Images;
+
+namespace TourApi.DTOs.Tours;
+
+public class TourDto
+{
+    public int Id { get; set; }
+    public string Code { get; set; } = null!;
+    public string Name { get; set; } = null!;
+    public decimal CurrentPrice { get; set; }
+    public int? AssignedTourGuideId { get; set; }
+    public string? AssignedTourGuideFullName { get; set; }
+    public List<TourItineraryLegDto> Itinerary { get; set; } = new();
+    public List<ImageDto> Images { get; set; } = new();
+}

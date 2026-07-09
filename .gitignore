@@ -22,3 +22,24 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# .NET
+bin/
+obj/
+.vs/
+*.user
+
+# Node / Vite
+node_modules/
+dist/
+.env
+.env.local
+.env.development.local
+.env.production.local
+
+# Uploads
+src/TourApi.Api/wwwroot/uploads/
+BackEnd/TourApi/src/TourApi.Api/wwwroot/uploads/
+
+# Logs
+*.log
