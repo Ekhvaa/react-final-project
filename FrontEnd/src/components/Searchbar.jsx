@@ -16,7 +16,6 @@ const Searchbar = ( {onChange, className, value, searchbarWidth} ) => {
     };
 // `w-${searchbarWidth} h-12 bg-white relative z-20 rounded-full`
   return (
-    <div className={`w-${searchbarWidth} h-12 bg-white relative z-20 rounded-full p-5`}>
         <form onSubmit={handleSubmit} className="flex shadow-lg rounded-3xl bg-white">
                 <input 
                     type="text" 
@@ -32,7 +31,6 @@ const Searchbar = ( {onChange, className, value, searchbarWidth} ) => {
                     <img src={searchIcon} alt="Search" className='h-5'/>
                 </button>
             </form>
-    </div>
   )
 }
 
