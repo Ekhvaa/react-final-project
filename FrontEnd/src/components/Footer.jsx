@@ -7,7 +7,6 @@ const Footer = () => {
     <footer className="bg-slate-800 text-slate-200 pt-10 pb-6 px-5 font-sans">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row flex-wrap justify-between gap-8">
         
-        {/* Brand & Description */}
         <div className="flex-1 min-w-[200px]">
           <h2 className="text-amber-500 text-2xl font-bold mb-3">Wanderlust Tours</h2>
           <p className="text-sm leading-relaxed text-slate-300">
@@ -15,7 +14,6 @@ const Footer = () => {
           </p>
         </div>
 
-        {/* Navigation Links */}
         <div className="flex-1 min-w-[200px]">
           <h3 className="text-amber-500 text-lg font-bold mb-3">Explore</h3>
           <ul className="space-y-2">
@@ -42,7 +40,6 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Customer Support */}
         <div className="flex-1 min-w-[200px]">
           <h3 className="text-amber-500 text-lg font-bold mb-3">Support</h3>
           <ul className="space-y-2">
@@ -71,7 +68,6 @@ const Footer = () => {
 
       </div>
 
-      {/* Copyright Bar */}
       <div className="text-center mt-10 pt-5 border-t border-slate-700 text-sm text-slate-400">
         <p>&copy; {currentYear} Wanderlust Tours. All rights reserved.</p>
       </div>

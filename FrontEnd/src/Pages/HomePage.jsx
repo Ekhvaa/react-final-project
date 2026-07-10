@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// Removed unused useNavigate import
 import Header from '../components/Header';
 import Hero from '../components/Hero';
 import TourCard from '../components/TourCard';
 import ValuePropositionCard from '../components/ValuePropositionCard';
 import Footer from '../components/Footer';
-
 import phone from '../assets/Phone.svg';
 import map from '../assets/Guide.svg';
 import money from '../assets/Money.svg';
@@ -47,15 +45,11 @@ const HomePage = () => {
       <main className="max-w-[1700px] mx-auto px-6 py-12">
         <h2 className='text-center text-3xl font-bold mb-18'>Why Choose Us?</h2>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-40 justify-items-center mb-20'>
-          {/* Added missing 'key' prop */}
           {valuePropositionValues.map((item, index) => (
             <ValuePropositionCard key={index} props={item} />
           ))}
         </div>
-
         <h2 className="text-3xl text-center font-bold mb-18 text-gray-900">Trending Tours</h2>
-        
-        {/* Conditional rendering moved inside the layout so Header/Footer don't disappear */}
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <p className="text-xl text-slate-500 font-semibold">Loading amazing adventures...</p>
@@ -66,11 +60,13 @@ const HomePage = () => {
           </div>
         ) : (
           <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-15 justify-items-center">
-            {/* Added missing 'key' prop */}
             {tours.map((tour, index) => (
               <TourCard 
-                key={tour.id || index} 
-                title={tour.name} 
+                key={tour.id || index}
+                id={tour.id}
+                imageUrl={tour.images[0]?.url}
+                title={tour.name}
+                description={tour.description}
                 price={tour.currentPrice} 
                 city={tour.startingCity} 
                 country={tour.startingCountry}

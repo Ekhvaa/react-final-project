@@ -44,7 +44,7 @@ const Hero = () => {
                 <p className='text-lg md:text-xl font-light mb-8 drop-shadow-md'>
                     Find your favourite tours here
                 </p>
-                <Searchbar onChange={handleChangeRedirect} searchbarWidth={'full'}/>
+                <Searchbar onChange={handleChangeRedirect}/>
             </div>
         </div>
     </>
