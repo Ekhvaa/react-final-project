@@ -34,6 +34,14 @@ public class HotelsController : ApiControllerBase
     public async Task<ActionResult<List<HotelServiceDto>>> GetServices() =>
         Ok(await _hotelService.GetHotelServicesAsync());
 
+    [HttpPost("services")]
+    [Authorize(Roles = ApplicationRoles.TravelAgentOrAdmin)]
+    public async Task<ActionResult<HotelServiceDto>> CreateService([FromBody] HotelServiceCreateRequest request)
+    {
+        var service = await _hotelService.CreateHotelServiceAsync(request);
+        return CreatedAtAction(nameof(GetServices), routeValues: null, value: service);
+    }
+
     [HttpPost]
     [Authorize(Roles = ApplicationRoles.TravelAgentOrAdmin)]
     public async Task<ActionResult<HotelDto>> Create([FromBody] HotelCreateRequest request)

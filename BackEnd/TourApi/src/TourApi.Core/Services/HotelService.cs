@@ -1,5 +1,6 @@
 using AutoMapper;
 using TourApi.DTOs.Hotels;
+using TourApi.Exceptions;
 using TourApi.Factories;
 using TourApi.Models;
 using TourApi.Repositories;
@@ -65,6 +66,33 @@ public class HotelService : IHotelService
         var services = await _unitOfWork.HotelServices.ListOrderedAsync();
 
         return _mapper.Map<List<HotelServiceDto>>(services);
+    }
+
+    public async Task<HotelServiceDto> CreateHotelServiceAsync(HotelServiceCreateRequest request)
+    {
+        var serviceName = request.Name.Trim();
+
+        if (string.IsNullOrWhiteSpace(serviceName))
+        {
+            throw new InvalidOperationException("Hotel service name is required.");
+        }
+
+        var alreadyExists = await _unitOfWork.HotelServices.ExistsByNameAsync(serviceName);
+
+        if (alreadyExists)
+        {
+            throw new DuplicateResourceException("Hotel service already exists.");
+        }
+
+        var service = new TourApi.Models.HotelService
+        {
+            Name = serviceName
+        };
+
+        _unitOfWork.HotelServices.Add(service);
+        await _unitOfWork.SaveChangesAsync();
+
+        return _mapper.Map<HotelServiceDto>(service);
     }
 
     private void SynchronizeHotelServices(Hotel hotel, IEnumerable<int> requestedServiceIds)

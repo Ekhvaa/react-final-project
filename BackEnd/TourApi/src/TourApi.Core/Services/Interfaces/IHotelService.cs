@@ -9,4 +9,5 @@ public interface IHotelService
     Task<HotelDto> CreateHotelAsync(HotelCreateRequest request);
     Task<bool> UpdateHotelAsync(int id, HotelUpdateRequest request);
     Task<List<HotelServiceDto>> GetHotelServicesAsync();
+    Task<HotelServiceDto> CreateHotelServiceAsync(HotelServiceCreateRequest request);
 }
