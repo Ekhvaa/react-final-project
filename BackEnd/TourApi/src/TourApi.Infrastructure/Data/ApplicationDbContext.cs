@@ -218,6 +218,7 @@ public class ApplicationDbContext : DbContext
             e.HasKey(x => x.Id).HasName("PK_Tours");
             e.Property(x => x.Code).HasMaxLength(50).IsRequired();
             e.Property(x => x.Name).HasColumnType("nvarchar(max)").IsRequired();
+            e.Property(x => x.Description).HasMaxLength(1000);
             e.Property(x => x.CurrentPrice).HasColumnType("money");
             e.Property(x => x.CreateDate).HasDefaultValueSql("getdate()");
             e.Property(x => x.IsDeleted).HasDefaultValue(false);
