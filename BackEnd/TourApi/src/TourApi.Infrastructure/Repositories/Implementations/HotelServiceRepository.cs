@@ -21,4 +21,13 @@ public sealed class HotelServiceRepository : Repository<HotelService>, IHotelSer
         var serviceIdList = serviceIds.Distinct().ToList();
         return DbSet.CountAsync(service => serviceIdList.Contains(service.Id), cancellationToken);
     }
+
+    public Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken = default)
+    {
+        var normalizedName = name.Trim().ToLower();
+
+        return DbSet.AnyAsync(
+            service => service.Name.ToLower() == normalizedName,
+            cancellationToken);
+    }
 }
