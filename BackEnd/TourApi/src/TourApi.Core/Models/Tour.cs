@@ -1,9 +1,14 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace TourApi.Models;
 
 public class Tour : BaseEntity
 {
     public string Code { get; set; } = null!;
     public string Name { get; set; } = null!;
+    
+    [StringLength(1000)]
+    public string? Description { get; set; }
 
     // Kept from the original script: no enforced FK (see README) - typically
     // used to point at the "main" / cover TourDetail row for a tour.

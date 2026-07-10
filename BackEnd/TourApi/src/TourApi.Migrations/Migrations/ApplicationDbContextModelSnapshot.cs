@@ -150,6 +150,54 @@ namespace TourApi.Migrations
                     b.ToTable("Countries", (string)null);
                 });
 
+            modelBuilder.Entity("TourApi.Models.EmailConfirmationToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime>("ExpiresAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("UsedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id")
+                        .HasName("PK_EmailConfirmationTokens");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique()
+                        .HasDatabaseName("IX_EmailConfirmationTokens_TokenHash");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("IX_EmailConfirmationTokens_UserId");
+
+                    b.ToTable("EmailConfirmationTokens", (string)null);
+                });
+
             modelBuilder.Entity("TourApi.Models.Employee", b =>
                 {
                     b.Property<int>("Id")
@@ -232,7 +280,6 @@ namespace TourApi.Migrations
 
                     b.UseTphMappingStrategy();
                 });
-
 
             modelBuilder.Entity("TourApi.Models.ExternalLogin", b =>
                 {
@@ -326,6 +373,60 @@ namespace TourApi.Migrations
                     b.ToTable("Hotels", (string)null);
                 });
 
+            modelBuilder.Entity("TourApi.Models.HotelImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("HotelId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCover")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<long>("Length")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id")
+                        .HasName("PK_HotelImages");
+
+                    b.HasIndex("HotelId")
+                        .HasDatabaseName("IX_HotelImages_HotelId");
+
+                    b.ToTable("HotelImages", (string)null);
+                });
+
             modelBuilder.Entity("TourApi.Models.HotelService", b =>
                 {
                     b.Property<int>("Id")
@@ -362,6 +463,114 @@ namespace TourApi.Migrations
                     b.ToTable("HotelServiceMappings", (string)null);
                 });
 
+            modelBuilder.Entity("TourApi.Models.PasswordResetToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime>("ExpiresAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("UsedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id")
+                        .HasName("PK_PasswordResetTokens");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique()
+                        .HasDatabaseName("IX_PasswordResetTokens_TokenHash");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("IX_PasswordResetTokens_UserId");
+
+                    b.ToTable("PasswordResetTokens", (string)null);
+                });
+
+            modelBuilder.Entity("TourApi.Models.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTime>("ExpiresAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("ReplacedByTokenHash")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("RevokedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RevokedByIp")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id")
+                        .HasName("PK_RefreshTokens");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique()
+                        .HasDatabaseName("IX_RefreshTokens_TokenHash");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("IX_RefreshTokens_UserId");
+
+                    b.ToTable("RefreshTokens", (string)null);
+                });
+
             modelBuilder.Entity("TourApi.Models.Tour", b =>
                 {
                     b.Property<int>("Id")
@@ -369,6 +578,9 @@ namespace TourApi.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AssignedTourGuideId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -380,8 +592,15 @@ namespace TourApi.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
+                    b.Property<int?>("CreatedByEmployeeId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("CurrentPrice")
                         .HasColumnType("money");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -401,9 +620,15 @@ namespace TourApi.Migrations
                     b.HasKey("Id")
                         .HasName("PK_Tours");
 
+                    b.HasIndex("AssignedTourGuideId")
+                        .HasDatabaseName("IX_Tours_AssignedTourGuideId");
+
                     b.HasIndex("Code")
                         .IsUnique()
                         .HasDatabaseName("IX_Tours_Code");
+
+                    b.HasIndex("CreatedByEmployeeId")
+                        .HasDatabaseName("IX_Tours_CreatedByEmployeeId");
 
                     b.ToTable("Tours", (string)null);
                 });
@@ -460,6 +685,60 @@ namespace TourApi.Migrations
                         .HasDatabaseName("IX_TourDetails_TourId");
 
                     b.ToTable("TourDetails", (string)null);
+                });
+
+            modelBuilder.Entity("TourApi.Models.TourImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("IsCover")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<long>("Length")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("TourId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id")
+                        .HasName("PK_TourImages");
+
+                    b.HasIndex("TourId")
+                        .HasDatabaseName("IX_TourImages_TourId");
+
+                    b.ToTable("TourImages", (string)null);
                 });
 
             modelBuilder.Entity("TourApi.Models.TouringHistory", b =>
@@ -568,6 +847,11 @@ namespace TourApi.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
+                    b.Property<bool>("EmailConfirmed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -593,6 +877,18 @@ namespace TourApi.Migrations
                         .HasDatabaseName("IX_User_Username");
 
                     b.ToTable("User", (string)null);
+                });
+
+            modelBuilder.Entity("TourApi.Models.Admin", b =>
+                {
+                    b.HasBaseType("TourApi.Models.Employee");
+
+                    b.ToTable(t =>
+                        {
+                            t.HasCheckConstraint("CK_PersonalInfo_Gender", "[Gender] = 'F' OR [Gender] = 'M'");
+                        });
+
+                    b.HasDiscriminator().HasValue("Admin");
                 });
 
             modelBuilder.Entity("TourApi.Models.TourGuide", b =>
@@ -661,6 +957,18 @@ namespace TourApi.Migrations
                     b.Navigation("Country");
                 });
 
+            modelBuilder.Entity("TourApi.Models.EmailConfirmationToken", b =>
+                {
+                    b.HasOne("TourApi.Models.User", "User")
+                        .WithMany("EmailConfirmationTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_EmailConfirmationTokens_User_UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TourApi.Models.Employee", b =>
                 {
                     b.HasOne("TourApi.Models.User", "User")
@@ -672,7 +980,6 @@ namespace TourApi.Migrations
 
                     b.Navigation("User");
                 });
-
 
             modelBuilder.Entity("TourApi.Models.ExternalLogin", b =>
                 {
@@ -698,6 +1005,18 @@ namespace TourApi.Migrations
                     b.Navigation("City");
                 });
 
+            modelBuilder.Entity("TourApi.Models.HotelImage", b =>
+                {
+                    b.HasOne("TourApi.Models.Hotel", "Hotel")
+                        .WithMany("Images")
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_HotelImages_Hotels_HotelId");
+
+                    b.Navigation("Hotel");
+                });
+
             modelBuilder.Entity("TourApi.Models.HotelServiceMapping", b =>
                 {
                     b.HasOne("TourApi.Models.Hotel", "Hotel")
@@ -717,6 +1036,49 @@ namespace TourApi.Migrations
                     b.Navigation("Hotel");
 
                     b.Navigation("HotelService");
+                });
+
+            modelBuilder.Entity("TourApi.Models.PasswordResetToken", b =>
+                {
+                    b.HasOne("TourApi.Models.User", "User")
+                        .WithMany("PasswordResetTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_PasswordResetTokens_User_UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TourApi.Models.RefreshToken", b =>
+                {
+                    b.HasOne("TourApi.Models.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_RefreshTokens_User_UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TourApi.Models.Tour", b =>
+                {
+                    b.HasOne("TourApi.Models.TourGuide", "AssignedTourGuide")
+                        .WithMany()
+                        .HasForeignKey("AssignedTourGuideId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .HasConstraintName("FK_Tours_Employees_AssignedTourGuideId");
+
+                    b.HasOne("TourApi.Models.Employee", "CreatedByEmployee")
+                        .WithMany()
+                        .HasForeignKey("CreatedByEmployeeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .HasConstraintName("FK_Tours_Employees_CreatedByEmployeeId");
+
+                    b.Navigation("AssignedTourGuide");
+
+                    b.Navigation("CreatedByEmployee");
                 });
 
             modelBuilder.Entity("TourApi.Models.TourDetail", b =>
@@ -744,6 +1106,18 @@ namespace TourApi.Migrations
                     b.Navigation("City");
 
                     b.Navigation("Hotel");
+
+                    b.Navigation("Tour");
+                });
+
+            modelBuilder.Entity("TourApi.Models.TourImage", b =>
+                {
+                    b.HasOne("TourApi.Models.Tour", "Tour")
+                        .WithMany("Images")
+                        .HasForeignKey("TourId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_TourImages_Tours_TourId");
 
                     b.Navigation("Tour");
                 });
@@ -802,6 +1176,8 @@ namespace TourApi.Migrations
                 {
                     b.Navigation("HotelServiceMappings");
 
+                    b.Navigation("Images");
+
                     b.Navigation("TourDetails");
                 });
 
@@ -813,6 +1189,8 @@ namespace TourApi.Migrations
             modelBuilder.Entity("TourApi.Models.Tour", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("Images");
 
                     b.Navigation("TourDetails");
 
@@ -828,9 +1206,15 @@ namespace TourApi.Migrations
 
             modelBuilder.Entity("TourApi.Models.User", b =>
                 {
+                    b.Navigation("EmailConfirmationTokens");
+
                     b.Navigation("Employee");
 
                     b.Navigation("ExternalLogins");
+
+                    b.Navigation("PasswordResetTokens");
+
+                    b.Navigation("RefreshTokens");
 
                     b.Navigation("Tourist");
                 });
