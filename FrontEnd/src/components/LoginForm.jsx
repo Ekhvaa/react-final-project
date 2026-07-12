@@ -24,14 +24,14 @@ export default function LoginForm() {
         return errors;
     };
 
-    const handleLoginSubmit = (e) => {
+    const handleLoginSubmit = async (e) => {
         e.preventDefault();
-        
+
         const errors = validateLogin();
         setLoginErrors(errors);
 
         if (Object.keys(errors).length === 0)
-            login(loginData.username, loginData.password);
+            await login(loginData.username, loginData.password);
     };
 
     return (
