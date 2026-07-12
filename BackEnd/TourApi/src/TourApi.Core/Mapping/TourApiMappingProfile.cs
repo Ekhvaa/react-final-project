@@ -1,4 +1,5 @@
 using AutoMapper;
+using TourApi.DTOs.Auth;
 using TourApi.DTOs.Bookings;
 using TourApi.DTOs.Geography;
 using TourApi.DTOs.Hotels;
@@ -85,6 +86,10 @@ public sealed class TourApiMappingProfile : Profile
             .ForMember(dest => dest.TourName, opt => opt.MapFrom(src => src.Tour.Name))
             .ForMember(dest => dest.TouristFullName, opt => opt.MapFrom(src => $"{src.Tourist.FirstName} {src.Tourist.LastName}"))
             .ForMember(dest => dest.TravelAgentFullName, opt => opt.MapFrom(src => $"{src.TravelAgent.FirstName} {src.TravelAgent.LastName}"));
+
+        CreateMap<User, CurrentUserDto>()
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Role, opt => opt.Ignore());
     }
 
     private static int CalculateDurationDays(Tour tour)
