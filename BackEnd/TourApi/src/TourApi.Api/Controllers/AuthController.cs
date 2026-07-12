@@ -116,4 +116,16 @@ public class AuthController : ApiControllerBase
         await _authService.ResendEmailConfirmationAsync(request.Email, cancellationToken);
         return Ok(new MessageResponse { Message = "If the email exists, a confirmation link was sent." });
     }
+
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<ActionResult<CurrentUserDto>> Me(CancellationToken cancellationToken)
+    {
+        var currentUser = await _authService.GetCurrentUserAsync(
+            CurrentUserId,
+            CurrentUserRole,
+            cancellationToken);
+
+        return currentUser is null ? Unauthorized() : Ok(currentUser);
+    }
 }
