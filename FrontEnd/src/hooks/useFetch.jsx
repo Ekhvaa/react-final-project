@@ -14,7 +14,7 @@ const useFetch = (url, transformFn = null) => {
       setError(null);
       try {
         const response = await axios.get(url);
-        // If a transformer function is provided, use it. Otherwise, return raw response.data
+        console.log(response.status);
         const processedData = transformFn ? transformFn(response.data) : response.data;
         setData(processedData);
       } catch (err) {
