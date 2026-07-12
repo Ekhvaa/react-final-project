@@ -9,21 +9,28 @@ const registerUrl = "https://tourist-platform-api-f9g6c9azezbvehf0.italynorth-01
 export const AuthProvider = ( {children} ) => {
     const navigate = useNavigate();
     const [token, setToken] = useState(localStorage.getItem("token"));
+    const [username, setUsername] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const login = async (username, password) => 
-        useAuthRequest(loginUrl, { username, password }, setErrorMessage, setToken, navigate);
+    const login = async (username, password) => {
+        await useAuthRequest(loginUrl, { username, password }, setErrorMessage, setToken, navigate);
+        setUsername(username);
+    }
+        
 
     const logout = () => {
         localStorage.removeItem("token");
         setToken(null);
     };
 
-    const register = async (registrationData) => 
-        useAuthRequest(registerUrl, registrationData, setErrorMessage, setToken, navigate);
+    const register = async (registrationData) => {
+        await useAuthRequest(registerUrl, registrationData, setErrorMessage, setToken, navigate);
+        setUsername(registrationData.username);
+    }
+
 
     return (
-        <AuthContext.Provider value={{errorMessage, token, login, logout, register}}>
+        <AuthContext.Provider value={{errorMessage, token, username, login, logout, register}}>
             {children}
         </AuthContext.Provider>
     )

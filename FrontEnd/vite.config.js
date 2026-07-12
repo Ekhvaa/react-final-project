@@ -10,4 +10,9 @@ export default defineConfig({
     tailwindcss(),
     svgr()
   ],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/tests/setupTests.js',
+  },
 })

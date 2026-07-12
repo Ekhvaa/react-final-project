@@ -31,7 +31,7 @@ const Searchbar = ( {onChange, styleMod, value} ) => {
         />
         <button 
             type="submit" 
-            className="bg-[#fcfb9d] rounded-full text-white px-3 py-3 m-3 hover:bg-[#fcfc03] font-semibold transition-colors shrink-0"
+            className="bg-[#fcfc03] rounded-full text-white px-3 py-3 m-3 hover:bg-[#fcfb9d] font-semibold transition-colors shrink-0"
         >
             <img src={searchIcon} alt="Search" className='h-5'/>
         </button>

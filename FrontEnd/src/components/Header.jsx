@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import logo from '../assets/Logo.svg'
 import profile from '../assets/Profile.svg'
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { useAuth } from '../hooks/useAuth'
+import axios from 'axios'
 
 const navLinks = [
     { to: "/", label: "Home"},
@@ -13,6 +15,42 @@ const navLinks = [
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
+    const [user, setUser] = useState(null);
+    const [authenticated, setAuthenticated] = useState(false);
+    const { username } = useAuth();
+
+    useEffect(() => {
+        const isLoggedIn = async () => {
+            const savedToken = localStorage.getItem("token");
+
+            if (!savedToken) {
+                setUser(null),
+                setAuthenticated(false)
+                return;
+            }
+
+            try {
+                const response = await axios.get(
+                    "https://tourist-platform-api-f9g6c9azezbvehf0.italynorth-01.azurewebsites.net/api/auth/me", {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem("token")}`,
+                            'Accept': "application/json"
+                        }
+                    }
+                );
+                
+                setUser(response.data);
+                setAuthenticated(true);
+            }
+            catch (error) {
+                console.error("Failed to fetch data:", error);
+                setUser(null);
+                setAuthenticated(false);
+            }
+        }
+
+        isLoggedIn();
+    }, []);
 
     return (
         <header className='relative w-full p-3 bg-[#8dfc9c] text-white z-50'>
@@ -30,12 +68,16 @@ export default function Header() {
                             </NavLink>
                         ))}
                     </nav>
-                    <div>
-                        <Link to="/profile" className='flex gap-3 items-center hover:opacity-80 transition-opacity'>
-                            <img src={profile} alt="Profile" className='h-6'></img>
-                            <p>Ekhva</p>
-                        </Link>
-                    </div>
+                    {authenticated ? (
+                        <div>
+                            <Link to="/profile" className='flex gap-3 items-center hover:opacity-80 transition-opacity'>
+                                <img src={profile} alt="Profile" className='h-6'></img>
+                                <p>Ekhva</p>
+                            </Link>
+                        </div>
+                    ) : (
+                        <Link to='/login' className='bg-[#fcfc03] hover:bg-[#fcfb9d] px-3 py-2 text-black rounded-xl'>Login</Link>
+                    )}
                 </div>
                 <button 
                     onClick={() => setIsOpen(!isOpen)} 
