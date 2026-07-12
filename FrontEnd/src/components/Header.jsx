@@ -43,12 +43,10 @@ export default function Header() {
                     aria-label="Toggle navigation menu"
                 >
                     {isOpen ? (
-                        // "X" Close Icon
                         <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     ) : (
-                        // "Burger" Menu Icon
                         <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
@@ -63,7 +61,7 @@ export default function Header() {
                                 key={link.to} 
                                 to={link.to} 
                                 end 
-                                onClick={() => setIsOpen(false)} // Closes menu on link click
+                                onClick={() => setIsOpen(false)}
                                 className="py-2 border-b border-white/10"
                             >
                                 {link.label}

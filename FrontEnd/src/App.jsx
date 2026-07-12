@@ -7,6 +7,8 @@ import HomePage from './Pages/HomePage'
 import TourPage from './Pages/TourPage'
 import { Route, Routes } from 'react-router-dom'
 import TourDetailsPage from './Pages/TourDetailsPage'
+import LoginPage from './Pages/LoginPage'
+import RegisterPage from './Pages/RegistrationPage'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,6 +19,8 @@ function App() {
       <Route path='/' element={<HomePage />}/>
       <Route path='/tours' element={<TourPage />}/>
       <Route path='/tours/:id' element={<TourDetailsPage />}/>
+      <Route path='/login' element={<LoginPage />}/>
+      <Route path='/register' element={<RegisterPage />}/>
     </Routes>
     </>
   )
