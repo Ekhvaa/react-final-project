@@ -19,6 +19,9 @@ public class Tour : BaseEntity
     public int? AssignedTourGuideId { get; set; }
     public TourGuide? AssignedTourGuide { get; set; }
 
+    public int? AssignedTravelAgentId { get; set; }
+    public TravelAgent? AssignedTravelAgent { get; set; }
+
     public ICollection<TourImage> Images { get; set; } = new List<TourImage>();
     public ICollection<TouringHistory> TouringHistories { get; set; } = new List<TouringHistory>();
 }

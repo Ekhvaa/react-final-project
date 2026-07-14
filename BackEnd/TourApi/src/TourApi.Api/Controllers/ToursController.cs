@@ -93,4 +93,15 @@ public class ToursController : ApiControllerBase
         var image = await _imageService.AddTourImageAsync(id, upload, isCover, cancellationToken);
         return CreatedAtAction(nameof(GetImages), new { id }, image);
     }
+
+    [HttpPut("{id:int}/travel-agent")]
+    [Authorize(Roles = ApplicationRoles.TravelAgentOrAdmin)]
+    public async Task<IActionResult> AssignTravelAgent(
+    int id,
+    [FromBody] AssignTravelAgentRequest request,
+    CancellationToken cancellationToken)
+    {
+        var updated = await _tourService.AssignTravelAgentAsync(id, request, cancellationToken);
+        return updated ? NoContent() : NotFound();
+    }
 }

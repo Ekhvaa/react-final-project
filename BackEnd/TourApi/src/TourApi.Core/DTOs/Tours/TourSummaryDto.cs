@@ -12,4 +12,6 @@ public class TourSummaryDto
     public int DurationDays { get; set; }
     public int? AssignedTourGuideId { get; set; }
     public string? AssignedTourGuideFullName { get; set; }
+    public int? AssignedTravelAgentId { get; set; }
+    public string? AssignedTravelAgentFullName { get; set; }
 }

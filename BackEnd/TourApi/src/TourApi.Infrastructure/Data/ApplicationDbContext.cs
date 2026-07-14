@@ -235,8 +235,15 @@ public class ApplicationDbContext : DbContext
                 .HasConstraintName("FK_Tours_Employees_AssignedTourGuideId")
                 .OnDelete(DeleteBehavior.NoAction);
             e.HasIndex(x => x.AssignedTourGuideId).HasDatabaseName("IX_Tours_AssignedTourGuideId");
-            // NOTE: TourDetailId intentionally has NO foreign key constraint,
-            // matching the original script, to avoid a Tours <-> TourDetails cycle.
+            
+            e.HasOne(x => x.AssignedTravelAgent)
+                .WithMany()
+                .HasForeignKey(x => x.AssignedTravelAgentId)
+                .HasConstraintName("FK_Tours_Employees_AssignedTravelAgentId")
+                .OnDelete(DeleteBehavior.NoAction);
+
+            e.HasIndex(x => x.AssignedTravelAgentId)
+                .HasDatabaseName("IX_Tours_AssignedTravelAgentId");
         });
 
         // ---------- TourImage ----------
