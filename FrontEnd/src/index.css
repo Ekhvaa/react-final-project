@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "DM Grigol Robakidze";
+  src: url("assets/fonts/DM-Grigol-Robakidze-1756112727.ttf");
+}
+
+@theme {
+  --font-grigol: "DM Grigol Robakidze", sans-serif;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+}
+
+body {
+  min-width: 320px;
+  display: block;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  max-width: none;
+  padding: 0;
+  text-align: left;
+}

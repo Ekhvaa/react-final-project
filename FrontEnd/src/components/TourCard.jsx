@@ -7,7 +7,6 @@ import NotBookmarkedIcon from '../assets/notBookmarkedIcon.svg?react'
 import { Link } from 'react-router-dom'
 import { useTourBookmark } from '../hooks/useTourBookmark'
 
-
 const TourCard = ( { id, title, price, city, country, imageUrl, description } ) => {
   const { bookmarkedTours, toggleBookmark, checkIsBookmarked} = useTourBookmark();
 
@@ -31,10 +30,6 @@ const TourCard = ( { id, title, price, city, country, imageUrl, description } ) 
           <span>{city}, {country}</span>
         </div>
         <p className='font-bold text-xl'>{title}</p>
-        <div className='flex gap-2'>
-          <img src={starRating} alt="" className='w-6'/>
-          <span>4.8</span>
-        </div>
         <div>
           <p>{description}</p>
         </div>

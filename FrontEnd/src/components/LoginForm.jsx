@@ -73,16 +73,6 @@ export default function LoginForm() {
                 )}
             </div>
 
-            <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center gap-2 text-slate-600">
-                    <input type="checkbox" className="rounded border-slate-300 text-[#8dfc9c] focus:ring-[#8dfc9c]" />
-                    Remember me
-                </label>
-                <a href="#" className="text-slate-900 font-medium hover:opacity-80 transition-opacity">
-                    Forgot password?
-                </a>
-            </div>
-
             <button
                 type="submit"
                 className="mt-2 w-full rounded-lg bg-[#8dfc9c] text-slate-900 font-semibold py-2.5 hover:opacity-90 transition-opacity"
