@@ -42,19 +42,51 @@ public sealed class TourApiMappingProfile : Profile
             .ForMember(dest => dest.Services, opt => opt.MapFrom(src => src.HotelServiceMappings.Select(m => m.HotelService)));
 
         CreateMap<TourDetail, TourItineraryLegDto>()
-            .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.City.Name))
-            .ForMember(dest => dest.HotelName, opt => opt.MapFrom(src => src.Hotel == null ? null : src.Hotel.Name));
+     .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.City.Name))
+     .ForMember(dest => dest.HotelName, opt => opt.MapFrom(src => src.Hotel == null ? null : src.Hotel.Name));
+
         CreateMap<Tour, TourDto>()
-            .ForMember(dest => dest.Itinerary, opt => opt.MapFrom(src => src.TourDetails.OrderBy(td => td.Sequence)))
-            .ForMember(dest => dest.AssignedTourGuideFullName, opt => opt.MapFrom(src => src.AssignedTourGuide == null ? null : src.AssignedTourGuide.FirstName + " " + src.AssignedTourGuide.LastName))
-            .ForMember(dest => dest.AssignedTravelAgentFullName, opt => opt.MapFrom(src => src.AssignedTravelAgent == null ? null : src.AssignedTravelAgent.FirstName + " " + src.AssignedTravelAgent.LastName));
+            .ForMember(dest => dest.Itinerary, opt => opt.MapFrom(src =>
+                src.TourDetails.OrderBy(td => td.Sequence)))
+            .ForMember(dest => dest.Images, opt => opt.MapFrom(src =>
+                src.Images.Where(image => !image.IsDeleted)))
+            .ForMember(dest => dest.AssignedTourGuideFullName, opt => opt.MapFrom(src =>
+                src.AssignedTourGuide == null
+                    ? null
+                    : src.AssignedTourGuide.FirstName + " " + src.AssignedTourGuide.LastName))
+            .ForMember(dest => dest.AssignedTravelAgentFullName, opt => opt.MapFrom(src =>
+                src.AssignedTravelAgent == null
+                    ? null
+                    : src.AssignedTravelAgent.FirstName + " " + src.AssignedTravelAgent.LastName));
+
         CreateMap<Tour, TourSummaryDto>()
-            .ForMember(dest => dest.StartingCity, opt => opt.MapFrom(src => src.TourDetails.OrderBy(td => td.Sequence).Select(td => td.City.Name).FirstOrDefault()))
-            .ForMember(dest => dest.StartingCountry, opt => opt.MapFrom(src => src.TourDetails.OrderBy(td => td.Sequence).Select(td => td.City.Country.Name).FirstOrDefault()))
-            .ForMember(dest => dest.EarliestDeparture, opt => opt.MapFrom(src => src.TourDetails.OrderBy(td => td.Sequence).Select(td => (DateTime?)td.EstimatedArrivalDate).FirstOrDefault()))
-            .ForMember(dest => dest.DurationDays, opt => opt.MapFrom(src => CalculateDurationDays(src)))
-            .ForMember(dest => dest.AssignedTourGuideFullName, opt => opt.MapFrom(src => src.AssignedTourGuide == null ? null : src.AssignedTourGuide.FirstName + " " + src.AssignedTourGuide.LastName))
-            .ForMember(dest => dest.AssignedTravelAgentFullName, opt => opt.MapFrom(src =>src.AssignedTravelAgent == null ? null : src.AssignedTravelAgent.FirstName + " " + src.AssignedTravelAgent.LastName));
+            .ForMember(dest => dest.StartingCity, opt => opt.MapFrom(src =>
+                src.TourDetails
+                    .OrderBy(td => td.Sequence)
+                    .Select(td => td.City.Name)
+                    .FirstOrDefault()))
+            .ForMember(dest => dest.StartingCountry, opt => opt.MapFrom(src =>
+                src.TourDetails
+                    .OrderBy(td => td.Sequence)
+                    .Select(td => td.City.Country.Name)
+                    .FirstOrDefault()))
+            .ForMember(dest => dest.EarliestDeparture, opt => opt.MapFrom(src =>
+                src.TourDetails
+                    .OrderBy(td => td.Sequence)
+                    .Select(td => (DateTime?)td.EstimatedArrivalDate)
+                    .FirstOrDefault()))
+            .ForMember(dest => dest.DurationDays, opt => opt.MapFrom(src =>
+                CalculateDurationDays(src)))
+            .ForMember(dest => dest.Images, opt => opt.MapFrom(src =>
+                src.Images.Where(image => !image.IsDeleted)))
+            .ForMember(dest => dest.AssignedTourGuideFullName, opt => opt.MapFrom(src =>
+                src.AssignedTourGuide == null
+                    ? null
+                    : src.AssignedTourGuide.FirstName + " " + src.AssignedTourGuide.LastName))
+            .ForMember(dest => dest.AssignedTravelAgentFullName, opt => opt.MapFrom(src =>
+                src.AssignedTravelAgent == null
+                    ? null
+                    : src.AssignedTravelAgent.FirstName + " " + src.AssignedTravelAgent.LastName));
 
         CreateMap<Tourist, TouristDto>()
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Username))
