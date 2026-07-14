@@ -8,6 +8,7 @@ using TourApi.Exceptions;
 using TourApi.Factories;
 using TourApi.Models;
 using TourApi.Repositories;
+using AutoMapper;
 
 namespace TourApi.Services;
 
@@ -24,6 +25,7 @@ public class AuthService : IAuthService
     private readonly IGoogleExternalAuthService _googleExternalAuthService;
     private readonly IFacebookExternalAuthService _facebookExternalAuthService;
     private readonly IEmailSender _emailSender;
+    private readonly IMapper _mapper;
     private readonly RefreshTokenOptions _refreshTokenOptions;
     private readonly EmailOptions _emailOptions;
 
@@ -35,6 +37,7 @@ public class AuthService : IAuthService
         IGoogleExternalAuthService googleExternalAuthService,
         IFacebookExternalAuthService facebookExternalAuthService,
         IEmailSender emailSender,
+        IMapper mapper,
         IOptions<RefreshTokenOptions> refreshTokenOptions,
         IOptions<EmailOptions> emailOptions)
     {
@@ -45,6 +48,7 @@ public class AuthService : IAuthService
         _googleExternalAuthService = googleExternalAuthService;
         _facebookExternalAuthService = facebookExternalAuthService;
         _emailSender = emailSender;
+        _mapper = mapper;
         _refreshTokenOptions = refreshTokenOptions.Value;
         _emailOptions = emailOptions.Value;
     }
@@ -184,6 +188,21 @@ public class AuthService : IAuthService
         _unitOfWork.PasswordResetTokens.Add(token);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         await _emailSender.SendPasswordResetAsync(request.Email, plainToken, cancellationToken);
+    }
+
+    public async Task<CurrentUserDto?> GetCurrentUserAsync(int userId, string role, CancellationToken cancellationToken = default)
+    {
+        var user = await _unitOfWork.Users.GetByIdAsync(userId, cancellationToken);
+
+        if (user is null || user.IsDeleted)
+        {
+            return null;
+        }
+
+        var dto = _mapper.Map<CurrentUserDto>(user);
+        dto.Role = role;
+
+        return dto;
     }
 
     public async Task ResetPasswordAsync(ResetPasswordRequest request, CancellationToken cancellationToken = default)

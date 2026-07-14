@@ -1,4 +1,5 @@
 using AutoMapper;
+using TourApi.DTOs.Auth;
 using TourApi.DTOs.Bookings;
 using TourApi.DTOs.Geography;
 using TourApi.DTOs.Hotels;
@@ -45,10 +46,13 @@ public sealed class TourApiMappingProfile : Profile
             .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.City.Name))
             .ForMember(dest => dest.HotelName, opt => opt.MapFrom(src => src.Hotel == null ? null : src.Hotel.Name));
         CreateMap<Tour, TourDto>()
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Itinerary, opt => opt.MapFrom(src => src.TourDetails.OrderBy(td => td.Sequence)))
             .ForMember(dest => dest.AssignedTourGuideFullName, opt => opt.MapFrom(src => src.AssignedTourGuide == null ? null : src.AssignedTourGuide.FirstName + " " + src.AssignedTourGuide.LastName))
             .ForMember(dest => dest.AssignedTravelAgentFullName, opt => opt.MapFrom(src => src.AssignedTravelAgent == null ? null : src.AssignedTravelAgent.FirstName + " " + src.AssignedTravelAgent.LastName));
+            .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images.Where(image => !image.IsDeleted)))
         CreateMap<Tour, TourSummaryDto>()
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.StartingCity, opt => opt.MapFrom(src => src.TourDetails.OrderBy(td => td.Sequence).Select(td => td.City.Name).FirstOrDefault()))
             .ForMember(dest => dest.StartingCountry, opt => opt.MapFrom(src => src.TourDetails.OrderBy(td => td.Sequence).Select(td => td.City.Country.Name).FirstOrDefault()))
             .ForMember(dest => dest.EarliestDeparture, opt => opt.MapFrom(src => src.TourDetails.OrderBy(td => td.Sequence).Select(td => (DateTime?)td.EstimatedArrivalDate).FirstOrDefault()))
@@ -84,6 +88,10 @@ public sealed class TourApiMappingProfile : Profile
             .ForMember(dest => dest.TourName, opt => opt.MapFrom(src => src.Tour.Name))
             .ForMember(dest => dest.TouristFullName, opt => opt.MapFrom(src => $"{src.Tourist.FirstName} {src.Tourist.LastName}"))
             .ForMember(dest => dest.TravelAgentFullName, opt => opt.MapFrom(src => $"{src.TravelAgent.FirstName} {src.TravelAgent.LastName}"));
+
+        CreateMap<User, CurrentUserDto>()
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Role, opt => opt.Ignore());
     }
 
     private static int CalculateDurationDays(Tour tour)

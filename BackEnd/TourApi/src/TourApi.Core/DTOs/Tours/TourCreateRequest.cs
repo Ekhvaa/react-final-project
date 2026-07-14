@@ -11,6 +11,9 @@ public class TourCreateRequest
     [Required]
     public string Name { get; set; } = null!;
 
+    [StringLength(1000)]
+    public string? Description { get; set; }
+
     [Range(0.01, 999999999)]
     public decimal CurrentPrice { get; set; }
 
