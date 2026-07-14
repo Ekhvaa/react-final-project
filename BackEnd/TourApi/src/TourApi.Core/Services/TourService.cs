@@ -4,6 +4,7 @@ using TourApi.DTOs.Common;
 using TourApi.DTOs.Tours;
 using TourApi.Exceptions;
 using TourApi.Factories;
+using TourApi.Models;
 using TourApi.QueryBuilders;
 using TourApi.Repositories;
 
@@ -134,6 +135,31 @@ public class TourService : ITourService
 
         var tours = await _unitOfWork.Tours.ListAssignedToTourGuideAsync(employee.Id, cancellationToken);
         return _mapper.Map<List<TourSummaryDto>>(tours);
+    }
+
+    public async Task<bool> AssignTravelAgentAsync(int tourId, AssignTravelAgentRequest request, CancellationToken cancellationToken = default)
+    {
+        var tour = await _unitOfWork.Tours.GetByIdAsync(tourId, cancellationToken);
+
+        if (tour is null || tour.IsDeleted)
+        {
+            return false;
+        }
+
+        var employee = await _unitOfWork.Employees.GetByIdAsync(
+            request.TravelAgentId,
+            cancellationToken);
+
+        if (employee is not TravelAgent || employee.IsDeleted)
+        {
+            throw new InvalidOperationException("Travel agent not found.");
+        }
+
+        tour.AssignedTravelAgentId = request.TravelAgentId;
+        tour.UpdateDate = DateTime.UtcNow;
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        return true;
     }
 
     private async Task EnsureCanManageTourAsync(

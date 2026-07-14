@@ -22,7 +22,8 @@ public sealed class TourRepository : Repository<Tour>, ITourRepository
                 .ThenInclude(detail => detail.Hotel)
             .Include(tour => tour.Images)
             .Include(tour => tour.CreatedByEmployee)
-            .Include(tour => tour.AssignedTourGuide);
+            .Include(tour => tour.AssignedTourGuide)
+            .Include(tour => tour.AssignedTravelAgent);
 
     public Task<Tour?> GetActiveByIdAsync(int id, CancellationToken cancellationToken = default) =>
         DbSet.FirstOrDefaultAsync(tour => tour.Id == id && !tour.IsDeleted, cancellationToken);

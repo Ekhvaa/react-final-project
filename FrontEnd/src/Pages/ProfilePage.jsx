@@ -11,36 +11,26 @@ export default function ProfilePage() {
     const { user, token } = useAuth();
 
     const [profile, setProfile] = useState(null);
-    const [tourHistory, setTourHistory] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
-        const loadTouristData = async () => {
+        const loadTouristProfile = async () => {
             if (!token || user?.role !== "Tourist") {
                 return;
             }
 
             try {
                 setIsLoading(true);
-                setErrorMessage("");
 
-                const profileResponse = await axios.get(`${API_BASE_URL}/api/users/me`, {
+                const response = await axios.get(`${API_BASE_URL}/api/users/me`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         Accept: "application/json",
                     },
                 });
 
-                const historyResponse = await axios.get(`${API_BASE_URL}/api/users/me/history`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        Accept: "application/json",
-                    },
-                });
-
-                setProfile(profileResponse.data);
-                setTourHistory(historyResponse.data);
+                setProfile(response.data);
             } catch {
                 setErrorMessage("Could not load profile details.");
             } finally {
@@ -48,20 +38,8 @@ export default function ProfilePage() {
             }
         };
 
-        loadTouristData();
+        loadTouristProfile();
     }, [token, user?.role]);
-
-    const formatDate = (dateValue) => {
-        if (!dateValue) {
-            return "N/A";
-        }
-
-        return new Date(dateValue).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-        });
-    };
 
     return (
         <>
@@ -70,7 +48,7 @@ export default function ProfilePage() {
             <main className="max-w-[1200px] mx-auto px-6 py-12">
                 <h1 className="text-3xl font-bold mb-6">Profile</h1>
 
-                <div className="border border-gray-300 rounded-2xl p-6 max-w-xl mb-8">
+                <div className="border border-gray-300 rounded-2xl p-6 max-w-xl">
                     {isLoading && (
                         <p className="text-gray-500">Loading profile...</p>
                     )}
@@ -130,48 +108,6 @@ export default function ProfilePage() {
                         </>
                     )}
                 </div>
-
-                {user?.role === "Tourist" && (
-                    <section>
-                        <h2 className="text-2xl font-bold mb-4">Tour History</h2>
-
-                        {isLoading ? (
-                            <p className="text-gray-500">Loading tour history...</p>
-                        ) : tourHistory.length === 0 ? (
-                            <div className="border border-gray-300 rounded-2xl p-6">
-                                <p className="text-gray-500">No tour history yet.</p>
-                            </div>
-                        ) : (
-                            <div className="grid gap-4">
-                                {tourHistory.map((historyItem, index) => (
-                                    <div
-                                        key={`${historyItem.tourCode}-${index}`}
-                                        className="border border-gray-300 rounded-2xl p-5"
-                                    >
-                                        <h3 className="text-xl font-semibold mb-2">
-                                            {historyItem.tourName}
-                                        </h3>
-
-                                        <p className="mb-1">
-                                            <span className="font-semibold">Code:</span>{" "}
-                                            {historyItem.tourCode}
-                                        </p>
-
-                                        <p className="mb-1">
-                                            <span className="font-semibold">Departure:</span>{" "}
-                                            {formatDate(historyItem.departureDate)}
-                                        </p>
-
-                                        <p>
-                                            <span className="font-semibold">Return:</span>{" "}
-                                            {formatDate(historyItem.returnDate)}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </section>
-                )}
             </main>
 
             <Footer />

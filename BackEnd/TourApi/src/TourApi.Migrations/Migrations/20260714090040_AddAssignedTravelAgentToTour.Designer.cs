@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TourApi.Data;
 
@@ -11,9 +12,11 @@ using TourApi.Data;
 namespace TourApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260714090040_AddAssignedTravelAgentToTour")]
+    partial class AddAssignedTravelAgentToTour
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -601,10 +604,6 @@ namespace TourApi.Migrations
                     b.Property<decimal>("CurrentPrice")
                         .HasColumnType("money");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -628,6 +627,7 @@ namespace TourApi.Migrations
 
                     b.HasIndex("AssignedTravelAgentId")
                         .HasDatabaseName("IX_Tours_AssignedTravelAgentId");
+
                     b.HasIndex("Code")
                         .IsUnique()
                         .HasDatabaseName("IX_Tours_Code");
