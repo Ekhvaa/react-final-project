@@ -1,0 +1,22 @@
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+}
+
+body {
+  min-width: 320px;
+  display: block;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  max-width: none;
+  padding: 0;
+  text-align: left;
+}

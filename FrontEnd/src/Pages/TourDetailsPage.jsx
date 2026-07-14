@@ -10,9 +10,6 @@ import { useAuth } from '../hooks/useAuth';
 
 const API_BASE_URL = 'https://tourist-platform-api-f9g6c9azezbvehf0.italynorth-01.azurewebsites.net';
 
-// Change this if your real TravelAgent id is different.
-const DEFAULT_TRAVEL_AGENT_ID = 5;
-
 const TourDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -28,6 +25,18 @@ const TourDetailsPage = () => {
   const { data: tour, isLoading: tourIsLoading, error: tourError } = useFetch(tourDetailsEndpointUrl);
   const { data: suggestedTours } = useFetch(suggestedToursEndpointUrl, (resData) => resData?.items || []);
 
+  const getFullImageUrl = (imageUrl) => {
+    if (!imageUrl) {
+      return null;
+    }
+
+    if (imageUrl.startsWith('http')) {
+      return imageUrl;
+    }
+
+    return `${API_BASE_URL}${imageUrl}`;
+  };
+
   const handleBookTour = async () => {
     setBookingMessage('');
     setBookingError('');
@@ -42,6 +51,11 @@ const TourDetailsPage = () => {
       return;
     }
 
+    if (!tour?.assignedTravelAgentId) {
+      setBookingError('This tour does not have a travel agent assigned yet.');
+      return;
+    }
+
     try {
       setIsBooking(true);
 
@@ -53,19 +67,25 @@ const TourDetailsPage = () => {
         },
         body: JSON.stringify({
           tourId: Number(id),
-          travelAgentId: DEFAULT_TRAVEL_AGENT_ID,
+          travelAgentId: tour.assignedTravelAgentId,
         }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
+        const errorText = await response.text();
 
-        setBookingError(
-          errorData?.detail ||
-          errorData?.message ||
-          'Could not book this tour.'
-        );
+        let errorMessage = 'Could not book this tour.';
 
+        try {
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData?.detail || errorData?.message || errorMessage;
+        } catch {
+          if (errorText) {
+            errorMessage = errorText;
+          }
+        }
+
+        setBookingError(errorMessage);
         return;
       }
 
@@ -99,6 +119,8 @@ const TourDetailsPage = () => {
     );
   }
 
+  const mainImageUrl = getFullImageUrl(tour?.images?.[0]?.url);
+
   return (
     <div>
       <Header />
@@ -111,11 +133,17 @@ const TourDetailsPage = () => {
           <div className='flex flex-col lg:flex-row gap-8 lg:gap-10 w-full'>
 
             <div className='w-full lg:w-[60%] xl:w-[65%] rounded-2xl overflow-hidden'>
-              <img
-                src={`${API_BASE_URL}${tour?.images?.[0]?.url}`}
-                alt="TourImage"
-                className='w-full h-64 md:h-96 lg:h-full object-cover rounded-2xl'
-              />
+              {mainImageUrl ? (
+                <img
+                  src={mainImageUrl}
+                  alt="TourImage"
+                  className='w-full h-64 md:h-96 lg:h-full object-cover rounded-2xl'
+                />
+              ) : (
+                <div className='w-full h-64 md:h-96 lg:h-full rounded-2xl bg-gray-200 flex items-center justify-center'>
+                  <p className='text-gray-500 font-semibold'>No image available</p>
+                </div>
+              )}
             </div>
 
             <div className='w-full lg:w-[40%] xl:w-[35%] p-5 md:p-7 border border-gray-300 rounded-2xl h-fit'>
@@ -135,11 +163,17 @@ const TourDetailsPage = () => {
               <button
                 type="button"
                 onClick={handleBookTour}
-                disabled={isBooking}
+                disabled={isBooking || !tour?.assignedTravelAgentId}
                 className='cursor-pointer w-full rounded-xl bg-[#8dfc9c] px-3 py-3 my-5 hover:bg-[#39bf00] font-semibold transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed'
               >
                 {isBooking ? 'Booking...' : 'Book Tour'}
               </button>
+
+              {!tour?.assignedTravelAgentId && (
+                <p className='text-red-500 font-semibold mb-4'>
+                  No travel agent assigned to this tour yet.
+                </p>
+              )}
 
               {bookingMessage && (
                 <p className='text-green-600 font-semibold mb-4'>{bookingMessage}</p>
@@ -150,9 +184,15 @@ const TourDetailsPage = () => {
               )}
 
               <p className='text-lg md:text-xl font-semibold mt-2'>Additional Details:</p>
+
               <p className='font-semibold mt-2'>
                 Guide: <span className='font-normal'>{tour?.assignedTourGuideFullName ?? "No guide assigned"}</span>
               </p>
+
+              <p className='font-semibold mt-1'>
+                Travel Agent: <span className='font-normal'>{tour?.assignedTravelAgentFullName ?? "No travel agent assigned"}</span>
+              </p>
+
               <p className='font-semibold mt-1'>
                 Hotel: <span className='font-normal'>{tour?.itinerary?.[0]?.hotelName ?? "Hotel is not included. You are responsible for finding one."}</span>
               </p>
@@ -161,7 +201,7 @@ const TourDetailsPage = () => {
                 <div className='flex gap-3 items-start'>
                   <CheckmarkIcon className="shrink-0 mt-1" />
                   <p className="text-sm md:text-base">
-                    <span className='font-bold'>Free cancellation</span> up to 24 hours before the experience starts (local time)
+                    <span className='font-bold'>Free cancellation</span> up to 24 hours before the experience starts local time
                   </p>
                 </div>
               </div>

@@ -1,180 +1,143 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import { useAuth } from "../hooks/useAuth";
+import React, { useMemo, useState } from 'react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import TourCard from '../components/TourCard';
+import useFetch from '../hooks/useFetch';
 
 const API_BASE_URL =
-    "https://tourist-platform-api-f9g6c9azezbvehf0.italynorth-01.azurewebsites.net";
+  'https://tourist-platform-api-f9g6c9azezbvehf0.italynorth-01.azurewebsites.net';
 
-export default function ProfilePage() {
-    const { user, token } = useAuth();
+const TourPage = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('price-asc');
 
-    const [profile, setProfile] = useState(null);
-    const [tourHistory, setTourHistory] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+  const toursEndpointUrl = `${API_BASE_URL}/api/tours?page=1&pageSize=100`;
 
-    useEffect(() => {
-        const loadTouristData = async () => {
-            if (!token || user?.role !== "Tourist") {
-                return;
-            }
+  const { data: tours, isLoading, error } = useFetch(
+    toursEndpointUrl,
+    (resData) => resData?.items || []
+  );
 
-            try {
-                setIsLoading(true);
-                setErrorMessage("");
+  const toursList = Array.isArray(tours) ? tours : [];
 
-                const profileResponse = await axios.get(`${API_BASE_URL}/api/users/me`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        Accept: "application/json",
-                    },
-                });
+  const filteredTours = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
 
-                const historyResponse = await axios.get(`${API_BASE_URL}/api/users/me/history`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        Accept: "application/json",
-                    },
-                });
+    let result = toursList.filter((tour) => {
+      if (!normalizedSearch) {
+        return true;
+      }
 
-                setProfile(profileResponse.data);
-                setTourHistory(historyResponse.data);
-            } catch {
-                setErrorMessage("Could not load profile details.");
-            } finally {
-                setIsLoading(false);
-            }
-        };
+      return (
+        tour?.name?.toLowerCase().includes(normalizedSearch) ||
+        tour?.description?.toLowerCase().includes(normalizedSearch) ||
+        tour?.startingCity?.toLowerCase().includes(normalizedSearch) ||
+        tour?.startingCountry?.toLowerCase().includes(normalizedSearch)
+      );
+    });
 
-        loadTouristData();
-    }, [token, user?.role]);
+    result = [...result].sort((a, b) => {
+      if (sortBy === 'price-asc') {
+        return Number(a?.currentPrice || 0) - Number(b?.currentPrice || 0);
+      }
 
-    const formatDate = (dateValue) => {
-        if (!dateValue) {
-            return "N/A";
-        }
+      if (sortBy === 'price-desc') {
+        return Number(b?.currentPrice || 0) - Number(a?.currentPrice || 0);
+      }
 
-        return new Date(dateValue).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-        });
-    };
+      if (sortBy === 'name-asc') {
+        return String(a?.name || '').localeCompare(String(b?.name || ''));
+      }
 
-    return (
-        <>
-            <Header />
+      return 0;
+    });
 
-            <main className="max-w-[1200px] mx-auto px-6 py-12">
-                <h1 className="text-3xl font-bold mb-6">Profile</h1>
+    return result;
+  }, [toursList, searchTerm, sortBy]);
 
-                <div className="border border-gray-300 rounded-2xl p-6 max-w-xl mb-8">
-                    {isLoading && (
-                        <p className="text-gray-500">Loading profile...</p>
-                    )}
+  return (
+    <>
+      <Header />
 
-                    {errorMessage && (
-                        <p className="text-red-500 mb-4">{errorMessage}</p>
-                    )}
+        <main className="flex-1 max-w-[1200px] mx-auto px-6 py-12 w-full">
+        <div className="text-center mb-12">
+            <p className="text-[#39bf00] font-semibold uppercase tracking-[0.2em] mb-3">
+                Explore Adventures
+            </p>
 
-                    {user?.role === "Tourist" && profile ? (
-                        <>
-                            <p className="mb-2">
-                                <span className="font-semibold">Username:</span>{" "}
-                                {profile.username}
-                            </p>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                Find Your Perfect Tour
+            </h1>
 
-                            <p className="mb-2">
-                                <span className="font-semibold">First name:</span>{" "}
-                                {profile.firstName}
-                            </p>
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+                Search destinations, compare prices, and discover your next unforgettable trip.
+            </p>
+            </div>
 
-                            <p className="mb-2">
-                                <span className="font-semibold">Last name:</span>{" "}
-                                {profile.lastName}
-                            </p>
+            <div className="max-w-[1000px] mx-auto mb-14 bg-white border border-gray-200 rounded-3xl shadow-md p-4 md:p-5">
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_240px] gap-4">
+                <div className="relative">
+                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+                    🔍
+                </span>
 
-                            <p className="mb-2">
-                                <span className="font-semibold">Email:</span>{" "}
-                                {profile.email}
-                            </p>
-
-                            <p className="mb-2">
-                                <span className="font-semibold">Phone:</span>{" "}
-                                {profile.contactPhone}
-                            </p>
-
-                            <p className="mb-2">
-                                <span className="font-semibold">Gender:</span>{" "}
-                                {profile.gender}
-                            </p>
-
-                            <p>
-                                <span className="font-semibold">National ID:</span>{" "}
-                                {profile.nationalId}
-                            </p>
-                        </>
-                    ) : (
-                        <>
-                            <p className="mb-2">
-                                <span className="font-semibold">Username:</span>{" "}
-                                {user?.username}
-                            </p>
-
-                            <p>
-                                <span className="font-semibold">Role:</span>{" "}
-                                {user?.role}
-                            </p>
-                        </>
-                    )}
+                <input
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search Tbilisi, Rome, hiking..."
+                    className="w-full border border-gray-300 rounded-2xl pl-14 pr-5 py-4 text-lg outline-none focus:border-[#39bf00] focus:ring-2 focus:ring-[#8dfc9c]/50 transition-all"
+                />
                 </div>
 
-                {user?.role === "Tourist" && (
-                    <section>
-                        <h2 className="text-2xl font-bold mb-4">Tour History</h2>
+                <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="w-full border border-gray-300 rounded-2xl px-5 py-4 text-lg outline-none bg-white focus:border-[#39bf00] focus:ring-2 focus:ring-[#8dfc9c]/50 transition-all cursor-pointer"
+                >
+                <option value="price-asc">Price: low to high</option>
+                <option value="price-desc">Price: high to low</option>
+                <option value="name-asc">Name A-Z</option>
+                </select>
+            </div>
+            </div>
 
-                        {isLoading ? (
-                            <p className="text-gray-500">Loading tour history...</p>
-                        ) : tourHistory.length === 0 ? (
-                            <div className="border border-gray-300 rounded-2xl p-6">
-                                <p className="text-gray-500">No tour history yet.</p>
-                            </div>
-                        ) : (
-                            <div className="grid gap-4">
-                                {tourHistory.map((historyItem, index) => (
-                                    <div
-                                        key={`${historyItem.tourCode}-${index}`}
-                                        className="border border-gray-300 rounded-2xl p-5"
-                                    >
-                                        <h3 className="text-xl font-semibold mb-2">
-                                            {historyItem.tourName}
-                                        </h3>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <p className="text-xl text-slate-500 font-semibold">
+              Loading tours...
+            </p>
+          </div>
+        ) : error ? (
+          <div className="text-center mt-10">
+            <p className="text-red-500 text-lg">{error}</p>
+          </div>
+        ) : filteredTours.length === 0 ? (
+          <div className="text-center mt-10">
+            <p className="text-gray-500 text-lg">
+              No tours found.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-15 justify-items-center">
+            {filteredTours.map((tour, index) => (
+              <TourCard
+                key={tour?.id || index}
+                id={tour?.id}
+                imageUrl={tour?.images?.[0]?.url}
+                title={tour?.name}
+                description={tour?.description}
+                price={tour?.currentPrice}
+                city={tour?.startingCity}
+                country={tour?.startingCountry}
+              />
+            ))}
+          </div>
+        )}
+      </main>
 
-                                        <p className="mb-1">
-                                            <span className="font-semibold">Code:</span>{" "}
-                                            {historyItem.tourCode}
-                                        </p>
+      <Footer />
+    </>
+  );
+};
 
-                                        <p className="mb-1">
-                                            <span className="font-semibold">Departure:</span>{" "}
-                                            {formatDate(historyItem.departureDate)}
-                                        </p>
-
-                                        <p>
-                                            <span className="font-semibold">Return:</span>{" "}
-                                            {formatDate(historyItem.returnDate)}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </section>
-                )}
-            </main>
-
-            <Footer />
-        </>
-    );
-}
+export default TourPage;

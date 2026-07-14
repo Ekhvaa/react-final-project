@@ -34,50 +34,50 @@ const valuePropositionValues = [
   }
 ];
 
-const API_BASE_URL =
-  'https://tourist-platform-api-f9g6c9azezbvehf0.italynorth-01.azurewebsites.net';
-
 const HomePage = () => {
-  const apiUrl = `${API_BASE_URL}/api/tours`;
+  const apiUrl = 'https://tourist-platform-api-f9g6c9azezbvehf0.italynorth-01.azurewebsites.net/api/tours';
   const { data: tours, isLoading, error } = useFetch(apiUrl, (resData) => resData?.items || []);
-
-  const toursList = Array.isArray(tours) ? tours : [];
 
   return (
     <>
       <Header />
       <Hero />
-
-      <main className="max-w-[1700px] mx-auto px-6 py-12">
-        {/* your existing sections */}
-
-        {!isLoading && !error && (
+      <main className="flex-1 max-w-[1200px] mx-auto px-6 py-12 w-full">
+        <h2 className='text-center text-3xl font-bold mb-18'>Why Choose Us?</h2>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-40 justify-items-center mb-20'>
+          {valuePropositionValues.map((item, index) => (
+            <ValuePropositionCard key={index} props={item} />
+          ))}
+        </div>
+        <h2 className="text-3xl text-center font-bold mb-18 text-gray-900">Trending Tours</h2>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <p className="text-xl text-slate-500 font-semibold">Loading amazing adventures...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center mt-10">
+            <p className="text-red-500 text-lg">{error}</p>
+          </div>
+        ) : (
           <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-15 justify-items-center">
-            {toursList.map((tour, index) => {
-              const imageUrl = tour?.images?.[0]?.url
-                ? `${API_BASE_URL}${tour.images[0].url}`
-                : null;
-
-              return (
-                <TourCard
-                  key={tour?.id || index}
-                  id={tour?.id}
-                  imageUrl={imageUrl}
-                  title={tour?.name}
-                  description={tour?.description}
-                  price={tour?.currentPrice}
-                  city={tour?.startingCity}
-                  country={tour?.startingCountry}
-                />
-              );
-            })}
+            {tours.map((tour, index) => (
+              <TourCard 
+                key={tour.id || index}
+                id={tour.id}
+                imageUrl={tour.images[0]?.url}
+                title={tour.name}
+                description={tour.description}
+                price={tour.currentPrice} 
+                city={tour.startingCity} 
+                country={tour.startingCountry}
+              />
+            ))}
           </div>
         )}
       </main>
-
       <Footer />
     </>
   );
-};
+}
 
 export default HomePage;
