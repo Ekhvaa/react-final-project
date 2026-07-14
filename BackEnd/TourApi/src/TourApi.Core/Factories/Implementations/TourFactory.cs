@@ -11,6 +11,7 @@ public sealed class TourFactory : ITourFactory
         {
             Code = request.Code,
             Name = request.Name,
+            Description = request.Description?.Trim(),
             CurrentPrice = request.CurrentPrice,
             TourDetailId = 0
         };
@@ -27,6 +28,7 @@ public sealed class TourFactory : ITourFactory
     {
         tour.Code = request.Code;
         tour.Name = request.Name;
+        tour.Description = request.Description?.Trim();
         tour.CurrentPrice = request.CurrentPrice;
         tour.UpdateDate = DateTime.UtcNow;
     }
