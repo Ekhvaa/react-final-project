@@ -1,36 +1,67 @@
 import React from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import Header from '../components/Header';
+import { useAuth } from '../hooks/useAuth';
 
-describe('Header Component Tests', () => {
-    const renderWithRouter = () => {
-        render(
-            <BrowserRouter>
-                <Header />
-            </BrowserRouter>
-        );
-    };
+vi.mock('../hooks/useAuth', () => ({
+  useAuth: vi.fn(),
+}));
 
-    test('1. renders the logo image successfully', () => {
-        renderWithRouter();
-        const logoImage = screen.getByAltText('logo');
-        expect(logoImage).toBeInTheDocument();
+const renderHeader = () =>
+  render(
+    <MemoryRouter>
+      <Header />
+    </MemoryRouter>
+  );
+
+describe('Header', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('shows a Login link and nav links, but no profile/logout, when logged out', () => {
+    useAuth.mockReturnValue({ user: null, isAuthenticated: false, logout: vi.fn() });
+
+    renderHeader();
+
+    expect(screen.getByRole('link', { name: /login/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /tours/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /contact/i })).toBeInTheDocument();
+    expect(screen.queryByText(/logout/i)).not.toBeInTheDocument();
+  });
+
+  it('shows the username and a working Logout button when logged in', () => {
+    const logout = vi.fn();
+    useAuth.mockReturnValue({
+      user: { username: 'jane_doe' },
+      isAuthenticated: true,
+      logout,
     });
 
-    test('2. displays the user profile name', () => {
-        renderWithRouter();
-        const profileNames = screen.getAllByText('Ekhva');
-        expect(profileNames.length).toBeGreaterThan(0);
-    });
+    renderHeader();
 
-    test('3. toggles the mobile menu when the burger button is clicked', () => {
-        renderWithRouter();
-        
-        const toggleButton = screen.getByLabelText('Toggle navigation menu');
-        
-        fireEvent.click(toggleButton);
-        expect(toggleButton).toBeInTheDocument();
-    });
+    expect(screen.getByText('jane_doe')).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /login/i })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /logout/i }));
+    expect(logout).toHaveBeenCalledTimes(1);
+  });
+
+  it('toggles the mobile menu open and closed when the hamburger button is clicked', () => {
+    useAuth.mockReturnValue({ user: null, isAuthenticated: false, logout: vi.fn() });
+
+    renderHeader();
+
+    expect(screen.getAllByRole('link', { name: /home/i })).toHaveLength(1);
+
+    const toggleButton = screen.getByRole('button', { name: /toggle navigation menu/i });
+    fireEvent.click(toggleButton);
+    expect(screen.getAllByRole('link', { name: /home/i })).toHaveLength(2);
+
+    fireEvent.click(toggleButton);
+    expect(screen.getAllByRole('link', { name: /home/i })).toHaveLength(1);
+  });
 });

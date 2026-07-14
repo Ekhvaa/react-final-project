@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import TourCard from '../components/TourCard';
 import useFetch from '../hooks/useFetch';
+import SearchIcon from '../assets/SearchIcon.svg?react'
 
 const API_BASE_URL =
   'https://tourist-platform-api-f9g6c9azezbvehf0.italynorth-01.azurewebsites.net';
@@ -78,7 +79,7 @@ const TourPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-[1fr_240px] gap-4">
                 <div className="relative">
                 <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
-                    🔍
+                    <SearchIcon className='w-5'/>
                 </span>
 
                 <input

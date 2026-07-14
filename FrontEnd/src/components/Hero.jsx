@@ -39,7 +39,7 @@ const Hero = () => {
             
             <div className='relative z-20 w-11/12 md:w-[40%] text-center text-white mt-10'>
                 <h1 className='text-3xl md:text-5xl font-bold mb-4 drop-shadow-lg'>
-                    Create new memories using COMPANYNAME
+                    Create unforgettable memories by seeing the world
                 </h1>
                 <p className='text-lg md:text-xl font-light mb-8 drop-shadow-md'>
                     Find your favourite tours here

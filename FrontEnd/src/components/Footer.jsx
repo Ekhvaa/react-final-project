@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Logo from './Logo';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -9,9 +10,7 @@ const Footer = () => {
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row flex-wrap justify-between gap-8">
 
         <div className="flex-1 min-w-[200px]">
-          <h2 className="text-amber-500 text-2xl font-bold mb-3">
-            Wanderlust Tours
-          </h2>
+          <Logo />
           <p className="text-sm leading-relaxed text-slate-300">
             Discover your next adventure. We provide unforgettable guided tours and experiences around the globe.
           </p>
@@ -67,7 +66,7 @@ const Footer = () => {
       </div>
 
       <div className="text-center mt-10 pt-5 border-t border-slate-700 text-sm text-slate-400">
-        <p>&copy; {currentYear} Wanderlust Tours. All rights reserved.</p>
+        <p>&copy; {currentYear} 1 კაციც და გავდივართ. All rights reserved.</p>
       </div>
     </footer>
   );
