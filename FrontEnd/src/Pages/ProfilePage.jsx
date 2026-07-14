@@ -128,13 +128,11 @@ export default function ProfilePage() {
 
             <main className="flex-1 max-w-[1200px] mx-auto px-6 py-12 w-full">
                 <h1 className="text-3xl font-bold mb-6">Profile</h1>
-
                 {successMessage && (
                     <p className="text-green-600 font-semibold mb-4">
                         {successMessage}
                     </p>
                 )}
-
                 {errorMessage && (
                     <p className="text-red-500 font-semibold mb-4">
                         {errorMessage}
